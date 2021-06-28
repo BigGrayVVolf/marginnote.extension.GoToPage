@@ -24,13 +24,14 @@ JSB.newAddon = function(mainPath) {
             }
         }
 
-        if (realPageNo && pageNoOffsets[currentDocmd5]) {
+        if (!isNaN(realPageNo)) {
             let fsbc = Application.sharedInstance().studyController(self.window);
             let gotoAlert = UIAlertView.makeWithTitleMessageDelegateCancelButtonTitleOtherButtonTitles("Go To Page", "", fsbc, "Real Go", []);
             gotoAlert.alertViewStyle = 2;
             gotoAlert.show();
             let tf = gotoAlert.textFieldAtIndex(0);
-            tf.text = (realPageNo + pageNoOffsets[currentDocmd5]).toString();
+            let offset = !isNaN(pageNoOffsets[currentDocmd5]) ? pageNoOffsets[currentDocmd5] : 0;
+            tf.text = (realPageNo + offset).toString();
         }
     }
 
