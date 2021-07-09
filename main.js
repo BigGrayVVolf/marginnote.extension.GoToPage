@@ -12,6 +12,7 @@ JSB.newAddon = function(mainPath) {
             if (NSUserDefaults.standardUserDefaults().objectForKey(KEY)) {
                 pageNoOffsets = NSUserDefaults.standardUserDefaults().objectForKey(KEY);
             }
+            self.checked = false
             // JSB.log('🌈🌈🌈 MNLOG pageNoOffsets keys: %@', Object.keys(pageNoOffsets).toString());
         },
         // Window disconnect
@@ -41,13 +42,17 @@ JSB.newAddon = function(mainPath) {
                 image: 'GoToPage.png',
                 object: self,
                 selector: "toggleGoToPage:",
-                checked: true 
+                checked: self.checked 
             };
         },
         // Add-On Switch
         toggleGoToPage: function(sender) {
             JSB.log('🌈🌈🌈 MNLOG toggleGoToPage');
             let app = Application.sharedInstance();
+
+            self.checked = true;
+            app.studyController(self.window).refreshAddonCommands();
+            
             if (app.queryCommandWithKeyFlagsInWindow("p", 0x100000, self.window).disabled) { return }
 
             var title = "Page Offset nil!"
@@ -78,14 +83,29 @@ JSB.newAddon = function(mainPath) {
                     }
                 }
         
+                let fsbc = app.studyController(self.window);
                 if (!isNaN(realPageNo)) {
-                    let fsbc = Application.sharedInstance().studyController(self.window);
                     let gotoAlert = UIAlertView.makeWithTitleMessageDelegateCancelButtonTitleOtherButtonTitles("Go To Page", "", fsbc, "Real Go", []);
                     gotoAlert.alertViewStyle = 2;
                     gotoAlert.show();
                     let tf = gotoAlert.textFieldAtIndex(0);
                     let offset = !isNaN(pageNoOffsets[currentDocmd5]) ? pageNoOffsets[currentDocmd5] : 0;
                     tf.text = (realPageNo + offset).toString();
+
+                    timeoutCount = 20;
+                    NSTimer.scheduledTimerWithTimeInterval(0.5, true, function(timer) {
+                        timeoutCount -= 1;
+                        if (app.osType === 2 || app.focusWindow.subviews.length === 1 || timeoutCount <= 0) {
+                            self.checked = false;
+                            fsbc.refreshAddonCommands();
+                            timer.invalidate();
+                            JSB.log('🌈🌈🌈 MNLOG timer invalidate, timeoutCount: %@', timeoutCount);
+                            return
+                        }
+                    });
+                } else {
+                    self.checked = false;
+                    fsbc.refreshAddonCommands();
                 }
             });
         },
