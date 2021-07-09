@@ -12,7 +12,7 @@ JSB.newAddon = function(mainPath) {
             if (NSUserDefaults.standardUserDefaults().objectForKey(KEY)) {
                 pageNoOffsets = NSUserDefaults.standardUserDefaults().objectForKey(KEY);
             }
-            // JSB.log('MNLOG pageNoOffsets keys: %@', Object.keys(pageNoOffsets).toString());
+            // JSB.log('🌈🌈🌈 MNLOG pageNoOffsets keys: %@', Object.keys(pageNoOffsets).toString());
         },
         // Window disconnect
         sceneDidDisconnect: function() {
@@ -46,7 +46,7 @@ JSB.newAddon = function(mainPath) {
         },
         // Add-On Switch
         toggleGoToPage: function(sender) {
-            JSB.log('MNLOG toggleGoToPage');
+            JSB.log('🌈🌈🌈 MNLOG toggleGoToPage');
             let app = Application.sharedInstance();
             if (app.queryCommandWithKeyFlagsInWindow("p", 0x100000, self.window).disabled) { return }
 
@@ -54,19 +54,19 @@ JSB.newAddon = function(mainPath) {
             if (pageNoOffsets[currentDocmd5]) {
                 title = 'Page Offset: ' + pageNoOffsets[currentDocmd5];
             }
-            JSB.log('MNLOG title: %@', title);  
+            JSB.log('🌈🌈🌈 MNLOG title: %@', title);  
             let message = 'Ex: Set Offset(2) and Page(10): "2@10"\nSet Page(10): "10"\nSet Offset(2): "2@"'
             UIAlertView.showWithTitleMessageStyleCancelButtonTitleOtherButtonTitlesTapBlock(title, message, 2, "Go", [], function(alert) {
-                JSB.log('MNLOG tapBlock: arg1: %@', alert);
+                JSB.log('🌈🌈🌈 MNLOG tapBlock: arg1: %@', alert);
                 let text = alert.textFieldAtIndex(0).text;
-                JSB.log('MNLOG settingAlert text: %@', text);
+                JSB.log('🌈🌈🌈 MNLOG settingAlert text: %@', text);
                 let texts = text.split('@');
         
                 var realPageNo;
                 if (texts.length == 2) {
                     if (!isNaN(parseInt(texts[0]))) {
                         pageNoOffsets[currentDocmd5] = parseInt(texts[0]);
-                        JSB.log('MNLOG pageNoOffsets keys: %@', Object.keys(pageNoOffsets).toString());
+                        JSB.log('🌈🌈🌈 MNLOG pageNoOffsets keys: %@', Object.keys(pageNoOffsets).toString());
                         NSUserDefaults.standardUserDefaults().setObjectForKey(pageNoOffsets, KEY);
                     }
                     if (!isNaN(parseInt(texts[1]))) {
